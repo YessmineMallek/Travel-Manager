@@ -1,0 +1,5 @@
+# depslib dependency file v1.0
+1671143537 source:c:\users\user\desktop\projet c\travel-manager\travel-manager\main.c
+	<stdio.h>
+	<stdlib.h>
+
