@@ -22,24 +22,24 @@ int main()
     {
         system("cls");
 
-        while (choix != 6)
+        while (choix != 7)
         {
 
             do
             {
-
-                printf("\t\tVous etes un administrateur.\n");
+                printf("\n\t\tVous etes un administrateur.\n");
                 printf("\nGESTION DES Voyages\n");
                 printf("\n* 1 *\tAjouter une Voyage");
                 printf("\n* 2 *\tModifier les coordonnees d'une Voyage");
                 printf("\n* 3 *\tSupprimer une Voyage");
                 printf("\n* 4 *\tRechercher une Voyage");
                 printf("\n* 5 *\tAfficher toutes les Voyages");
-                printf("\n* 6 *\tQuitter le programme");
+                printf("\n* 6 *\tAfficher la description des Voyages");
+                printf("\n* 7 *\tQuitter le programme");
                 printf("\n\nSaisissez votre choix : ");
                 fflush(stdin);
                 scanf("%d", &choix);
-            } while ((choix < 1) || (choix > 6));
+            } while ((choix < 1) || (choix > 7));
             printf("votree choix est egale a %d", choix);
             switch (choix)
             {
@@ -49,14 +49,19 @@ int main()
                 break;
             case 5:
                 system("cls");
-                getAllVoyage();
+                getAll();
+                break;
+            case 6:
+                system("cls");
+                printf("\t\tNos meilleurs offres pour les vacances\n");
+                getDescriptionVoyages();
                 break;
             }
         }
     }
     else
     {
-        while (choix != 6)
+        while (choix != 3)
         {
             system("cls");
             printf("\v\vVotre voyage commence maintenant.\n");
@@ -71,9 +76,10 @@ int main()
             } while ((choix < 1) || (choix > 3));
             switch (choix)
             {
-            case 1:
+            case 2:
                 system("cls");
-                getAllVoyage();
+                printf("\t\tNos meilleurs offres pour les vacances\n");
+                getDescriptionVoyages();
                 break;
             }
         }
