@@ -23,36 +23,44 @@ typedef struct Voyage
     float prix;
     int nbrePlacesRest; // Pour les chaises restantes
 } Voyage;
-/**********************Afficher tous les voyages**********************/
+int calculerDuree(Voyage voyage)
+{
+    int duree = -1;
+    int dateDepJour;
+    int dateArrJour;
+    dateDepJour = voyage.dateDep.annee * 365 + voyage.dateDep.mois * 30 + voyage.dateDep.jour;
+    dateArrJour = voyage.dateArriv.annee * 365 + voyage.dateArriv.mois * 30 + voyage.dateArriv.jour;
+    duree = dateArrJour - dateDepJour;
+    return duree;
+}
+
+/**********************Afficher tous les voyages formatées **********************/
 void getDescriptionVoyages()
 {
-    Voyage Voyage;
+    Voyage voyage;
     int chaine = 0;
     // ouvrir le ficher avec le mode ecriture/lecture en fin du fichier (a+)
     ficVoyage = fopen("Voyages.txt", "a+");
     if (ficVoyage == NULL) // tester si le ficher est ouvert
         exit(1);
-    int duree;
-    int dateDepJour;
-    int dateArrJour;
+
     while (chaine != -1)
     {
         chaine = fscanf(ficVoyage, "%s   %s   %f   %d/%d/%d   %d/%d/%d   %s   %s   %s   %d",
-                        Voyage.code, Voyage.description, &Voyage.prix,
-                        &Voyage.dateDep.jour, &Voyage.dateDep.mois, &Voyage.dateDep.annee,
-                        &Voyage.dateArriv.jour, &Voyage.dateArriv.mois, &Voyage.dateArriv.annee,
-                        Voyage.aeroportDep, Voyage.aeroportArr,
-                        Voyage.compagnieAerienne, &Voyage.nbrePlacesRest);
-        dateDepJour = Voyage.dateDep.annee * 365 + Voyage.dateDep.mois * 30 + Voyage.dateDep.jour;
-        dateArrJour = Voyage.dateArriv.annee * 365 + Voyage.dateArriv.mois * 30 + Voyage.dateArriv.jour;
-        duree = dateArrJour - dateDepJour;
-        printf("\n%d jours a %s\n%s\nA partir de : %d/%d/%d\nJusqu'a : %d/%d/%d", duree, Voyage.aeroportArr, Voyage.description,
-               Voyage.dateDep.jour, Voyage.dateDep.mois, Voyage.dateDep.annee,
-               Voyage.dateArriv.jour, Voyage.dateArriv.mois, Voyage.dateArriv.annee);
+                        voyage.code, voyage.description, &voyage.prix,
+                        &voyage.dateDep.jour, &voyage.dateDep.mois, &voyage.dateDep.annee,
+                        &voyage.dateArriv.jour, &voyage.dateArriv.mois, &voyage.dateArriv.annee,
+                        voyage.aeroportDep, voyage.aeroportArr,
+                        voyage.compagnieAerienne, &voyage.nbrePlacesRest);
+        int duree = calculerDuree(voyage);
+        printf("\n%d jours a %s\n%s\nA partir de : %d/%d/%d\nJusqu'a : %d/%d/%d", duree, voyage.aeroportArr, voyage.description,
+               voyage.dateDep.jour, voyage.dateDep.mois, voyage.dateDep.annee,
+               voyage.dateArriv.jour, voyage.dateArriv.mois, voyage.dateArriv.annee);
         printf("\n---------------------------------------------------------\n");
     }
     fclose(ficVoyage);
 }
+
 int testSiFichierVide()
 {
     int caracterePremier = 0;
@@ -85,7 +93,6 @@ int voyageExiste(char codeVoyageAajoute[30])
         {
             if (strcmp(codeVoyageAajoute, Voyage.code) == 0) // les chaines sont identiques
                 return 1;
-            printf("%s ", Voyage.code);
         }
     }
 
@@ -96,6 +103,7 @@ int voyageExiste(char codeVoyageAajoute[30])
 void ajoutVoyage()
 {
     Voyage Voyage;
+    int duree;
     // ouvrir le ficher avec le mode ecriture/lecture en fin du fichier (a+)
     ficVoyage = fopen("Voyages.txt", "a+");
     if (ficVoyage == NULL) // tester si le ficher est ouvert
@@ -105,16 +113,18 @@ void ajoutVoyage()
     printf("Donner la description du Voyage : ");
     fflush(stdin);
     gets(Voyage.description);
-
-    // dateDepart
-    printf("Donner la date de depart sous la forme (jj/mm/aaaa) : ");
-    fflush(stdin);
-    scanf("%d/%d/%d", &Voyage.dateDep.jour, &Voyage.dateDep.mois, &Voyage.dateDep.annee);
-    // dateArrivee
-    printf("Donner la date d'arrivee sous la forme (jj/mm/aaaa) : ");
-    fflush(stdin);
-    scanf("%d/%d/%d", &Voyage.dateArriv.jour, &Voyage.dateArriv.mois, &Voyage.dateArriv.annee);
-
+    do
+    {
+        // dateDepart
+        printf("Donner la date de depart sous la forme (jj/mm/aaaa) : ");
+        fflush(stdin);
+        scanf("%d/%d/%d", &Voyage.dateDep.jour, &Voyage.dateDep.mois, &Voyage.dateDep.annee);
+        // dateArrivee
+        printf("Donner la date d'arrivee sous la forme (jj/mm/aaaa) : ");
+        fflush(stdin);
+        scanf("%d/%d/%d", &Voyage.dateArriv.jour, &Voyage.dateArriv.mois, &Voyage.dateArriv.annee);
+        duree = calculerDuree(Voyage);
+    } while (duree < -1);
     // Aeroport Depart
     printf("Donner l'aeroport depart : ");
     fflush(stdin);
@@ -159,7 +169,7 @@ void ajoutVoyage()
                     Voyage.aeroportDep, Voyage.aeroportArr,
                     Voyage.compagnieAerienne, Voyage.nbrePlacesRest) != -1)
         {
-            printf("**************** Ajout effectuee avec succees ************************\n");
+            printf("\n**************** Ajout effectuee avec succees ************************\n");
             // Fermer le fichier
             fclose(ficVoyage);
         }
@@ -169,7 +179,7 @@ void ajoutVoyage()
         printf("***************************** Voyage existe deja***************************\n");
     }
 }
-
+/******************** Afficher tous les voyages****************/
 void getAll()
 {
     char line[255];
@@ -181,4 +191,30 @@ void getAll()
         printf("%s", line);
     }
     fclose(ficVoyage);
+}
+/*********************Modifier date des Voyages*********************************/
+Voyage *modifierVoyage(Voyage *nvVoyage)
+{
+    int choix = 0;
+    printf("\t\tModifier les coordonnes du voyage\n");
+    printf("* 1 * : Modifer la description\n");
+    printf("* 2 * : Modifer les dates\n");
+    printf("* 3 * : Modifer la compagnie Aerienne \n");
+    printf("* 4 * : Modifer ville de depart et ville d'arrivee \n");
+    printf("* 5 * : Modifer le prix \n");
+
+    switch (choix)
+    {
+    case 1:
+        // description
+
+        printf("Veuillez entrez la nouvelle description\n");
+        fflush(stdin);
+        gets((*nvVoyage).description);
+        
+        break;
+
+    default:
+        break;
+    }
 }
