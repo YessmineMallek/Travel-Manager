@@ -40,12 +40,25 @@ int main()
                 fflush(stdin);
                 scanf("%d", &choix);
             } while ((choix < 1) || (choix > 7));
-            printf("votree choix est egale a %d", choix);
             switch (choix)
             {
             case 1:
                 system("cls");
                 ajoutVoyage(ficVoyage);
+                break;
+            case 2:
+                system("cls");
+                int nbre = nbreVoyages();
+                int choix;
+                getAll();
+                do
+                {
+                    printf("Saisir le code de voyage a modifier : ");
+                    scanf("%d", &choix);
+                    modifiderVoyage(choix);
+                } while (choix<=0 ||choix>nbre );
+               
+
                 break;
             case 3:
                 system("cls");

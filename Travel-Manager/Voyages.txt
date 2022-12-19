@@ -1,3 +1,2 @@
-2   istanbul   1200.000000   13/2/2022   19/2/2022   SFAX   ISTANBUL   TRANSAVIA   2 
-2   aaaaaa   1200.000000   12/2/2000   14/2/2000   SFAX   TUNIS   AIRFRANCE   2
-3   heeeeeeeeeeeeyy   1200.000000   12/2/200   22/2/2000   SFAX   TUNIS   AIRFRANCE   2
+1   Firstt one    1200.000000   12/2/2022   13/2/2022   Sfax   orly   Tunisair   2
+2   second onee   1800.000000   12/2/2022   25/2/2022   SFAX   ISTANBUL   Tunisair   2

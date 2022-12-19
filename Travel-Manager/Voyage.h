@@ -326,3 +326,71 @@ void getByDates()
         fclose(ficVoyage);
     }
 }
+/**************************Modifier Voyage*******************************************/
+void modifiderVoyage(int code)
+{
+    int choix = 0;
+    ficVoyage = fopen("Voyages.txt", "a+");
+    nv = fopen("nv.txt", "w+");
+
+    Voyage voyage;
+    if (ficVoyage == NULL) // tester si le ficher est ouvert
+        exit(1);
+    while (choix != 7)
+    {
+        do
+        {
+            printf("\nModification d'un voyage\n");
+            printf("\n* 1 *\tModifier du description");
+            printf("\n* 2 *\tModifier les dates du Voyage");
+            printf("\n* 3 *\tModifier l'aeroport du depart ou l'aeroport d'arrivee");
+            printf("\n* 4 *\tModifier la compagnie aerienne");
+            printf("\n* 5 *\tModifier le prix du voyage");
+            printf("\n* 6 *\tModifier le nombre des places restantes");
+            printf("\n* 7 *\tQuitter le programme");
+            printf("\n\nSaisissez votre choix : ");
+            fflush(stdin);
+            scanf("%d", &choix);
+
+        } while ((choix < 1) || (choix > 7));
+
+        while (fscanf(ficVoyage, "%d   %s   %f   %d/%d/%d   %d/%d/%d   %s   %s   %s   %d",
+                      &voyage.code, voyage.description, &voyage.prix, &voyage.dateDep.jour, &voyage.dateDep.mois, &voyage.dateDep.annee,
+                      &voyage.dateArriv.jour, &voyage.dateArriv.mois, &voyage.dateArriv.annee,
+                      voyage.aeroportDep,
+                      voyage.aeroportArr, voyage.compagnieAerienne, &voyage.nbrePlacesRest) != EOF)
+        {
+
+            if (voyage.code == code)
+            {
+
+                switch (choix)
+                {
+                case 1:
+                    printf("La nouvelle description du voyage %d :\n ", code);
+                    fflush(stdin);
+                    gets(voyage.description);
+                    fprintf(nv, "%d   %s   %f   %d/%d/%d   %d/%d/%d   %s   %s   %s   %d\n", voyage.code, voyage.description, voyage.prix, voyage.dateDep.jour, voyage.dateDep.mois, voyage.dateDep.annee, voyage.dateArriv.jour, voyage.dateArriv.mois, voyage.dateArriv.annee, voyage.aeroportDep, voyage.aeroportArr, voyage.compagnieAerienne, voyage.nbrePlacesRest);
+                    break;
+                case 2:
+                    Date nvDateDep;
+                    Date nvDateArr;
+                    do
+                    {
+                        printf("La nouvelle date de depart du voyage %d :\n ", code);
+                        scanf("%d%d%d", &nvDateDep.jour, &nvDateDep.mois, &nvDateDep.annee);
+                        if (nvDateDep.jour > 0 && nvDateDep.mois > 0 && nvDateDep.annee > 0)
+                            voyage.dateDep = nvDateDep;
+                        printf("La nouvelle date d'arrivee du voyage %d :\n ", code);
+                        scanf("%d%d%d", &nvDateArr.jour, &nvDateArr.mois, &nvDateArr.annee);
+                        if (nvDateArr.jour > 0 && nvDateArr.mois > 0 && nvDateArr.annee > 0)
+                            voyage.dateArriv = nvDateArr;
+                    } while (calculerDuree(voyage.dateDep, voyage.dateArriv));
+                    fprintf(nv, "%d   %s   %f   %d/%d/%d   %d/%d/%d   %s   %s   %s   %d\n", voyage.code, voyage.description, voyage.prix, voyage.dateDep.jour, voyage.dateDep.mois, voyage.dateDep.annee, voyage.dateArriv.jour, voyage.dateArriv.mois, voyage.dateArriv.annee, voyage.aeroportDep, voyage.aeroportArr, voyage.compagnieAerienne, voyage.nbrePlacesRest);
+                    break;
+                case 3:
+                }
+            }
+        }
+    }
+}
