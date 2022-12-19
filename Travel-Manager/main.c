@@ -47,6 +47,11 @@ int main()
                 system("cls");
                 ajoutVoyage(ficVoyage);
                 break;
+            case 3:
+                system("cls");
+                supprimerVoyage();
+                break;
+
             case 5:
                 system("cls");
                 getAll();
@@ -63,11 +68,10 @@ int main()
     {
         while (choix != 3)
         {
-            system("cls");
             printf("\v\vVotre voyage commence maintenant.\n");
             do
             {
-                printf("\n* 1 *\tRechercher une Voyage");
+                printf("\n* 1 *\tRechercher des Voyages par dates de depart ,date d'arrivee");
                 printf("\n* 2 *\tAfficher toutes les Voyages");
                 printf("\n* 3 *\tQuitter le programme");
                 printf("\n\nSaisissez votre choix : ");
@@ -76,8 +80,12 @@ int main()
             } while ((choix < 1) || (choix > 3));
             switch (choix)
             {
-            case 2:
+            case 1:
+
                 system("cls");
+                getByDates();
+
+            case 2:
                 printf("\t\tNos meilleurs offres pour les vacances\n");
                 getDescriptionVoyages();
                 break;
