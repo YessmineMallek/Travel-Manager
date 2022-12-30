@@ -3,6 +3,7 @@
 #include <String.h>
 #include "user.h"
 #include "Voyage.h"
+#include "reservation.h"
 
 int main(int argc, char **argv)
 {
@@ -12,6 +13,8 @@ int main(int argc, char **argv)
     char password[30] = "";
     int choix1, auth;
     user newUser;
+    int res, idVoy;
+    int nbreVoyages = idVoyage();
     do
     {
         printf("\t\tBienvenue\n");
@@ -22,15 +25,20 @@ int main(int argc, char **argv)
 
     do
     {
-
+        system("cls");
         if (choix1 == 2)
         {
+
             ajouterUtilisateur(&newUser);
             sprintf(username, newUser.nomUtilisateur);
             sprintf(password, newUser.motDePasse);
         }
         if (choix1 == 1)
         {
+            printf("-------------------------------------------\n");
+            printf("\t\t\tSe connectez ! \n");
+            printf("-------------------------------------------\n");
+
             printf("Entrez votre Nom d'utilisateur :");
             fflush(stdin);
             scanf("%s", username);
@@ -54,7 +62,7 @@ int main(int argc, char **argv)
                     printf("\n* 1 *\tAjouter une Voyage");
                     printf("\n* 2 *\tModifier les coordonnees d'une Voyage");
                     printf("\n* 3 *\tSupprimer une Voyage");
-                    printf("\n* 4 *\tRechercher une Voyage");
+                    printf("\n* 4 *\tAfficher les reservations disponibles");
                     printf("\n* 5 *\tAfficher toutes les Voyages");
                     printf("\n* 6 *\tAfficher la description des Voyages");
                     printf("\n* 7 *\tQuitter le programme");
@@ -80,7 +88,6 @@ int main(int argc, char **argv)
                         printf("Saisir le code de voyage a modifier : ");
                         scanf("%d", &codeAmodifier);
                     } while (codeAmodifier <= 0 || codeAmodifier > nbre);
-                    printf("heeeereeeeeeeeeeee\n\n");
 
                     int existe = getVoyageById(codeAmodifier, &voyage);
 
@@ -112,7 +119,10 @@ int main(int argc, char **argv)
                     system("cls");
                     supprimerVoyage();
                     break;
-
+                case 4:
+                    system("cls");
+                    afficherReservations();
+                    break;
                 case 5:
                     system("cls");
                     getAll();
@@ -131,7 +141,7 @@ int main(int argc, char **argv)
 
             while (choix != 3)
             {
-                printf("\t\tVotre voyage commence maintenant.\n");
+                printf("\n\t\tVotre voyage commence maintenant.\n");
                 do
                 {
                     printf("\n* 1 *\tRechercher des Voyages par dates de depart ,date d'arrivee");
@@ -144,15 +154,45 @@ int main(int argc, char **argv)
                 switch (choix)
                 {
                 case 1:
-
                     system("cls");
                     getByDates();
+                    do
+                    {
+                        printf("\t\tVoulez-vous reserver?\n* 1 *:oui\n* 2 *:non\n");
+                        printf("Votre reponse : ");
+                        scanf("%d", &res);
+                    } while (res != 1 && res != 2);
+                    if (res == 1)
+                    {
+                        do
+                        {
+                            printf("Entrer le numero de voyage : ");
+                            scanf("%d", &idVoy);
+                        } while (idVoy > nbreVoyages);
+                        ajouterReservation(username, idVoy);
+                    }
                     break;
 
                 case 2:
                     system("cls");
                     printf("\t\tNos meilleurs offres pour les vacances\n");
                     getDescriptionVoyages();
+                    do
+                    {
+                        printf("\t\tVoulez-vous reserver?\n* 1 *:oui\n* 2 *:non\n");
+                        printf("Votre reponse : ");
+                        scanf("%d", &res);
+                    } while (res != 1 && res != 2);
+                    if (res == 1)
+                    {
+                        do
+                        {
+                            printf("Entrer le numero de voyage : ");
+                            scanf("%d", &idVoy);
+                        } while (idVoy > nbreVoyages);
+                        ajouterReservation(username, idVoy);
+                    }
+
                     break;
                 }
             }

@@ -94,18 +94,18 @@ void ajouterUtilisateur(user *userToAdd)
                 exit(1);
 
             fprintf(ficUser, "%d|%s|%s|%s\n", (*userToAdd).id, (*userToAdd).nomUtilisateur, (*userToAdd).motDePasse, (*userToAdd).role);
+            printf("---------------------------------------------------------\n");
             printf("Ajout effectuee avec succes\n");
+            printf("---------------------------------------------------------\n");
         }
         else
         {
+            printf("---------------------------------------------------------\n");
             printf("nom d'Utilisateur existe deja\n");
+            printf("---------------------------------------------------------\n");
         }
     } while (existe == 1);
-    printf("************************ ***********************\n");
     fclose(ficUser);
-    printf("%s ***\n", (*userToAdd).nomUtilisateur);
-
-    printf("***********************************************\n");
 }
 /***********************s'authentifier**************************/
 int authentifier(char username[30], char password[30])
@@ -140,7 +140,10 @@ int authentifier(char username[30], char password[30])
     }
     else
     {
+        printf("---------------------------------------------------------\n");
         printf("Utilisateur n'existe pas ou nom d'utlisateur incorrect\n");
+        printf("---------------------------------------------------------\n");
+
         return -1;
     }
     return -2;

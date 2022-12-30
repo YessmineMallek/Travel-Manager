@@ -2,6 +2,8 @@
     "files.associations": {
         "user.h": "c",
         "new": "c",
-        "*.tcc": "c"
+        "*.tcc": "c",
+        "voyage.h": "c",
+        "reservation.h": "c"
     }
 }
