@@ -156,7 +156,7 @@ int main(int argc, char **argv)
             if (auth == 0)
             {
 
-                while (choix != 5)
+                while (choix != 6)
                 {
                     printf("\n----------------------------------------------------------------------\n");
                     printf("\n\t\t\tVotre voyage commence maintenant.\n");
@@ -167,11 +167,12 @@ int main(int argc, char **argv)
                         printf("\n* 2 *\tRechercher des Voyages par dates de depart ,date d'arrivee");
                         printf("\n* 3 *\tChercher par ville depart");
                         printf("\n* 4 *\tChercher par ville Arrivee");
-                        printf("\n* 5 *\tSe deconnecter");
+                        printf("\n* 5 *\tChercher par mois ,jour,annee");
+                        printf("\n* 6 *\tSe deconnecter");
                         printf("\n\nSaisissez votre choix : ");
                         fflush(stdin);
                         scanf("%d", &choix);
-                    } while ((choix < 1) || (choix > 5));
+                    } while ((choix < 1) || (choix > 6));
                     switch (choix)
                     {
 
@@ -234,6 +235,176 @@ int main(int argc, char **argv)
 
                     case 5:
                         system("cls");
+                        int critere;
+                        printf("\n----------------------------------------------------------------------\n");
+                        printf("\t\t\tChercher Voyage\n");
+                        printf("\n----------------------------------------------------------------------\n");
+                        printf("* 1 *:Date depart\n* 2 *:Date Arrivee\n");
+                        printf("----------------------------------------------------------------------\n");
+                        printf("Saisir votre choix : ");
+                        scanf("%d", &critere);
+                        switch (critere)
+                        {
+                        case 1:
+                            system("cls");
+                            int choice11;
+                            printf("\n-----------------------------Date Depart-----------------------------------------\n");
+                            printf("* 1 *:Par jour\n* 2 *:Par mois\n* 3 *:Par annee\n* 4 *:Annuler\n ");
+                            printf("\n----------------------------------------------------------------------\n");
+                            printf("Votre choix : ");
+                            scanf("%d", &choice11);
+                            switch (choice11)
+                            {
+                            case 1:
+                                int j;
+                                printf("Saisir le numero du jour : ");
+                                scanf("%d", &j);
+                                getDepartByJour(j);
+                                do
+                                {
+                                    printf("\t\tVoulez-vous reserver?\n* 1 *:oui\n* 2 *:non\n");
+                                    printf("Votre reponse : ");
+                                    scanf("%d", &res);
+                                } while (res != 1 && res != 2);
+                                if (res == 1)
+                                {
+                                    do
+                                    {
+                                        printf("Entrer le numero de voyage : ");
+                                        scanf("%d", &idVoy);
+                                    } while (idVoy > nbreVoyages);
+                                    ajouterReservation(username, idVoy);
+                                }
+
+                                break;
+                            case 2:
+                                int m;
+                                printf("Saisir le numero du mois : ");
+                                scanf("%d", &m);
+                                getDepartByMois(m);
+                                do
+                                {
+                                    printf("\t\tVoulez-vous reserver?\n* 1 *:oui\n* 2 *:non\n");
+                                    printf("Votre reponse : ");
+                                    scanf("%d", &res);
+                                } while (res != 1 && res != 2);
+                                if (res == 1)
+                                {
+                                    do
+                                    {
+                                        printf("Entrer le numero de voyage : ");
+                                        scanf("%d", &idVoy);
+                                    } while (idVoy > nbreVoyages);
+                                    ajouterReservation(username, idVoy);
+                                }
+                                break;
+                            case 3:
+                                int a;
+                                printf("Saisir l'annee : ");
+                                scanf("%d", &a);
+                                getDepartByAnnee(a);
+                                do
+                                {
+                                    printf("\t\tVoulez-vous reserver?\n* 1 *:oui\n* 2 *:non\n");
+                                    printf("Votre reponse : ");
+                                    scanf("%d", &res);
+                                } while (res != 1 && res != 2);
+                                if (res == 1)
+                                {
+                                    do
+                                    {
+                                        printf("Entrer le numero de voyage : ");
+                                        scanf("%d", &idVoy);
+                                    } while (idVoy > nbreVoyages);
+                                    ajouterReservation(username, idVoy);
+                                }
+                                break;
+
+                            default:
+                                break;
+                            }
+                            break;
+
+                        case 2:
+                            system("cls");
+                            int choice12;
+                            printf("\n-----------------------------Date Arrivee-----------------------------------------\n");
+                            printf("* 1 *:Par jour\n* 2 *:Par mois\n* 3 *:Par annee\n* 4 *:Annuler\n ");
+                            printf("\n----------------------------------------------------------------------\n");
+                            printf("Votre choix : ");
+                            scanf("%d", &choice12);
+                            switch (choice12)
+                            {
+                            case 1:
+                                int j;
+                                printf("Saisir le numero du jour : ");
+                                scanf("%d", &j);
+                                getArriveeByJour(j);
+                                do
+                                {
+                                    printf("\t\tVoulez-vous reserver?\n* 1 *:oui\n* 2 *:non\n");
+                                    printf("Votre reponse : ");
+                                    scanf("%d", &res);
+                                } while (res != 1 && res != 2);
+                                if (res == 1)
+                                {
+                                    do
+                                    {
+                                        printf("Entrer le numero de voyage : ");
+                                        scanf("%d", &idVoy);
+                                    } while (idVoy > nbreVoyages);
+                                    ajouterReservation(username, idVoy);
+                                }
+                                break;
+                            case 2:
+                                int m;
+                                printf("Saisir le numero du mois : ");
+                                scanf("%d", &m);
+                                getArriveeByMois(m);
+                                do
+                                {
+                                    printf("\t\tVoulez-vous reserver?\n* 1 *:oui\n* 2 *:non\n");
+                                    printf("Votre reponse : ");
+                                    scanf("%d", &res);
+                                } while (res != 1 && res != 2);
+                                if (res == 1)
+                                {
+                                    do
+                                    {
+                                        printf("Entrer le numero de voyage : ");
+                                        scanf("%d", &idVoy);
+                                    } while (idVoy > nbreVoyages);
+                                    ajouterReservation(username, idVoy);
+                                }
+                                break;
+                            case 3:
+                                int a;
+                                printf("Saisir l'annee : ");
+                                scanf("%d", &a);
+                                getArriveeByAnnee(a);
+                                do
+                                {
+                                    printf("\t\tVoulez-vous reserver?\n* 1 *:oui\n* 2 *:non\n");
+                                    printf("Votre reponse : ");
+                                    scanf("%d", &res);
+                                } while (res != 1 && res != 2);
+                                if (res == 1)
+                                {
+                                    do
+                                    {
+                                        printf("Entrer le numero de voyage : ");
+                                        scanf("%d", &idVoy);
+                                    } while (idVoy > nbreVoyages);
+                                    ajouterReservation(username, idVoy);
+                                }
+                                break;
+                            }
+
+                            break;
+                        }
+
+                    case 6:
+                        system("cls");
 
                         break;
                     }
@@ -243,6 +414,7 @@ int main(int argc, char **argv)
             {
                 printf("\nMot de passe incorrect!!\n");
             }
+
         } while (auth == -1 || auth == -2);
 
     } while (choix1 == 1 || choix1 == 2);

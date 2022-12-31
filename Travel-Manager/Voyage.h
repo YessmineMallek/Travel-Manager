@@ -308,6 +308,60 @@ void getAll()
     }
     fclose(ficVoyage);
 }
+/**************************getDepartByJour*****************************/
+void getDepartByJour(int jour)
+{
+    char line[255];
+    Voyage voyage;
+    ficVoyage = fopen("Voyages.txt", "r");
+    if (ficVoyage == NULL) // tester si le ficher est ouvert
+        exit(1);
+    while (fgets(line, 254, ficVoyage) != NULL)
+    {
+        convertirEnVoyage(line, &voyage);
+        if (voyage.dateDep.jour == jour)
+        {
+            afficherVoyage(voyage);
+        }
+    }
+    fclose(ficVoyage);
+}
+/**************************getDepartBymois*****************************/
+void getDepartByMois(int mois)
+{
+    char line[255];
+    Voyage voyage;
+    ficVoyage = fopen("Voyages.txt", "r");
+    if (ficVoyage == NULL) // tester si le ficher est ouvert
+        exit(1);
+    while (fgets(line, 254, ficVoyage) != NULL)
+    {
+        convertirEnVoyage(line, &voyage);
+        if (voyage.dateDep.mois == mois)
+        {
+            afficherVoyage(voyage);
+        }
+    }
+    fclose(ficVoyage);
+}
+/**************************getDepartByAnnee*****************************/
+void getDepartByAnnee(int annne)
+{
+    char line[255];
+    Voyage voyage;
+    ficVoyage = fopen("Voyages.txt", "r");
+    if (ficVoyage == NULL) // tester si le ficher est ouvert
+        exit(1);
+    while (fgets(line, 254, ficVoyage) != NULL)
+    {
+        convertirEnVoyage(line, &voyage);
+        if (voyage.dateDep.annee == annne)
+        {
+            afficherVoyage(voyage);
+        }
+    }
+    fclose(ficVoyage);
+}
 /**************************Get par ville Arrivee*****************************/
 void getByVilleArrivee(char arrivee[30])
 {
@@ -733,5 +787,59 @@ void modifiderNombrePlaces(int code, int nvNbre)
         fprintf(ficVoyage, "%d|%s|%f|%d/%d/%d|%d/%d/%d|%s|%s|%s|%d\n", voyage.code, voyage.description, voyage.prix, voyage.dateDep.jour, voyage.dateDep.mois, voyage.dateDep.annee, voyage.dateArriv.jour, voyage.dateArriv.mois, voyage.dateArriv.annee, voyage.VilleDep, voyage.villeArr, voyage.compagnieAerienne, voyage.nbrePlacesRest);
     }
     fclose(nv);
+    fclose(ficVoyage);
+}
+/**************************getArriveeByJour*****************************/
+void getArriveeByJour(int jour)
+{
+    char line[255];
+    Voyage voyage;
+    ficVoyage = fopen("Voyages.txt", "r");
+    if (ficVoyage == NULL) // tester si le ficher est ouvert
+        exit(1);
+    while (fgets(line, 254, ficVoyage) != NULL)
+    {
+        convertirEnVoyage(line, &voyage);
+        if (voyage.dateArriv.jour == jour)
+        {
+            afficherVoyage(voyage);
+        }
+    }
+    fclose(ficVoyage);
+}
+/**************************getDepartBymois*****************************/
+void getArriveeByMois(int mois)
+{
+    char line[255];
+    Voyage voyage;
+    ficVoyage = fopen("Voyages.txt", "r");
+    if (ficVoyage == NULL) // tester si le ficher est ouvert
+        exit(1);
+    while (fgets(line, 254, ficVoyage) != NULL)
+    {
+        convertirEnVoyage(line, &voyage);
+        if (voyage.dateArriv.mois == mois)
+        {
+            afficherVoyage(voyage);
+        }
+    }
+    fclose(ficVoyage);
+}
+/**************************getDepartByAnnee*****************************/
+void getArriveeByAnnee(int annne)
+{
+    char line[255];
+    Voyage voyage;
+    ficVoyage = fopen("Voyages.txt", "r");
+    if (ficVoyage == NULL) // tester si le ficher est ouvert
+        exit(1);
+    while (fgets(line, 254, ficVoyage) != NULL)
+    {
+        convertirEnVoyage(line, &voyage);
+        if (voyage.dateArriv.annee == annne)
+        {
+            afficherVoyage(voyage);
+        }
+    }
     fclose(ficVoyage);
 }
