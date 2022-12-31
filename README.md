@@ -19,6 +19,7 @@ voyages.
 ● Ajouter un voyage .<br /> 
 ● Supprimer un voyage.<br /> 
 ● Modifier un voyage.<br /> 
+● Consulter les reservations.<br /> 
 
 ##### Voyageur 
 ● Ajouter reservations .<br /> 
