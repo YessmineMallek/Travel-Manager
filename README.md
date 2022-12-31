@@ -1,5 +1,4 @@
 # Travel-Manager
-<<<<<<< HEAD
 # Gestion Des voyages
 
 #### Description
@@ -30,5 +29,4 @@ voyages.
 -Visual Studio Code,<br />
 #### Lien d'une vidéo démonstratif :
 (https://drive.google.com/drive/folders/1H7yeGtmLG2V0v7n6J88P3cmwHH4pPC16?usp=sharing)
-=======
->>>>>>> 605cefaa70b3ad78aa5202615b035c92504e1973
+
