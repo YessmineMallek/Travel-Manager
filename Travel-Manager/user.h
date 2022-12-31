@@ -77,13 +77,21 @@ void ajouterUtilisateur(user *userToAdd)
         printf("\t\tAjout nouveau utilisateur\n");
         (*userToAdd).id = id + 1;
         // nom d'utilisateur
-        printf("donner le nom d'utilisateur\n");
+        printf("donner le nom d'utilisateur : ");
         fflush(stdin);
         gets((*userToAdd).nomUtilisateur);
         // mot de passe
-        printf("Donner le mot de passe \n");
+        printf("Donner le mot de passe : ");
         fflush(stdin);
-        gets((*userToAdd).motDePasse);
+        int index = 0;
+        char ch;
+        while ((ch = _getch()) != 13)
+        {
+            (*userToAdd).motDePasse[index] = ch;
+            index++;
+        }
+        (*userToAdd).motDePasse[index] = '\0';
+
         sprintf((*userToAdd).role, "client");
         existe = existeUser((*userToAdd));
 
@@ -94,18 +102,17 @@ void ajouterUtilisateur(user *userToAdd)
                 exit(1);
 
             fprintf(ficUser, "%d|%s|%s|%s\n", (*userToAdd).id, (*userToAdd).nomUtilisateur, (*userToAdd).motDePasse, (*userToAdd).role);
+            printf("\n---------------------------------------------------------\n");
             printf("Ajout effectuee avec succes\n");
+            printf("\n---------------------------------------------------------\n");
         }
         else
         {
+            system("cls");
             printf("nom d'Utilisateur existe deja\n");
         }
     } while (existe == 1);
-    printf("************************ ***********************\n");
     fclose(ficUser);
-    printf("%s ***\n", (*userToAdd).nomUtilisateur);
-
-    printf("***********************************************\n");
 }
 /***********************s'authentifier**************************/
 int authentifier(char username[30], char password[30])
@@ -140,7 +147,8 @@ int authentifier(char username[30], char password[30])
     }
     else
     {
-        printf("Utilisateur n'existe pas ou nom d'utlisateur incorrect\n");
+        printf("\nUtilisateur n'existe pas ou nom d'utlisateur incorrect\n");
+
         return -1;
     }
     return -2;
