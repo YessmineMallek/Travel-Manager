@@ -10,16 +10,16 @@ voyages.<br />
 #### Fonctionnalités du l'application<br /> 
 -Deux utilisateurs sont envisagés par cette solution.<br /> 
 ##### Administrateur et voyageur<br /> 
-● Afficher la description d’un voyage.<br /> 
+● Consulter la description d’un voyage.<br /> 
 ● S'authentifier .<br /> 
-● Ajouter utilisateur.<br /> 
+● Créer un compte.<br /> 
 
 ##### Administrateur<br /> 
 ● Ajouter un voyage .<br /> 
 ● Supprimer un voyage.<br /> 
 ● Modifier un voyage.<br /> 
 
-##### Client<br /> 
+##### Voyageur<br /> 
 ● Ajouter reservations .<br /> 
 ● Recherche des voyages disponibles selon des dates précises.<br /> 
 ● Recherche par ville de depart ou ville d'arrivee.<br /> 
