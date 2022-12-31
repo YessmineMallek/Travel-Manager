@@ -23,8 +23,8 @@ voyages.
 
 ##### Voyageur 
 ● Ajouter reservations .<br /> 
-● Recherche des voyages disponibles selon des dates précises.<br /> 
-● Recherche par ville de depart ou ville d'arrivee.<br /> 
+● Rechercher des voyages disponibles selon des dates précises.<br /> 
+● Rechercher par ville de depart ou ville d'arrivee.<br /> 
 
 #### Outils Utilisés:
 -Visual Studio Code,<br />
