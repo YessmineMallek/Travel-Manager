@@ -5,7 +5,7 @@
 -Travel-Manager est une simple application cmd pour la gestion d’une agence de voyage écrit en
 langage C. <br />
 -Il permet de voir tous les voyages disponibles entre deux dates et gère les dates des
-voyages.<br />
+voyages.
 
 #### Fonctionnalités du l'application<br /> 
 -Deux utilisateurs sont envisagés par cette solution.<br /> 
