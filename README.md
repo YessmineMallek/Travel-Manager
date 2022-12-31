@@ -10,9 +10,10 @@ voyages.
 #### Fonctionnalités du l'application 
 -Deux utilisateurs sont envisagés par cette solution.<br /> 
 ##### Administrateur et voyageur
-● Consulter la description d’un voyage.<br /> 
 ● S'authentifier .<br /> 
 ● Créer un compte.<br /> 
+● Consulter la description d’un voyage.<br /> 
+
 
 ##### Administrateur 
 ● Ajouter un voyage .<br /> 
