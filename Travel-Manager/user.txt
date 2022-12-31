@@ -34,3 +34,7 @@
 34|newClient|newclient|client
 35|client1|client1|client
 36|NEWCLIENT|NEWCLIENT|client
+37|eya2|2Y11|client
+38|yesmin|yesmin|client
+39|nassim|nasmmin|client
+40|newUser|new|client
