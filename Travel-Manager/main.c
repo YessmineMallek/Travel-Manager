@@ -15,7 +15,7 @@ int main(int argc, char **argv)
     int choix1, auth;
     user newUser;
     int res, idVoy;
-    int nbreVoyages = idVoyage() + 1;
+    int nbreVoyages = idVoyage();
     do
     {
         do
@@ -195,7 +195,7 @@ int main(int argc, char **argv)
                             {
                                 printf("Entrer le numero de voyage : ");
                                 scanf("%d", &idVoy);
-                            } while (idVoy > nbreVoyages);
+                            } while (!(idVoy <= nbreVoyages));
                             ajouterReservation(username, idVoy);
                         }
 
@@ -272,7 +272,7 @@ int main(int argc, char **argv)
                                     {
                                         printf("Entrer le numero de voyage : ");
                                         scanf("%d", &idVoy);
-                                    } while (idVoy > nbreVoyages);
+                                    } while (!(idVoy <= nbreVoyages));
                                     ajouterReservation(username, idVoy);
                                 }
 
@@ -294,7 +294,7 @@ int main(int argc, char **argv)
                                     {
                                         printf("Entrer le numero de voyage : ");
                                         scanf("%d", &idVoy);
-                                    } while (idVoy > nbreVoyages);
+                                    } while (!(idVoy <= nbreVoyages));
                                     ajouterReservation(username, idVoy);
                                 }
                                 break;
@@ -315,7 +315,7 @@ int main(int argc, char **argv)
                                     {
                                         printf("Entrer le numero de voyage : ");
                                         scanf("%d", &idVoy);
-                                    } while (idVoy > nbreVoyages);
+                                    } while (!(idVoy <= nbreVoyages));
                                     ajouterReservation(username, idVoy);
                                 }
                                 break;
@@ -352,7 +352,7 @@ int main(int argc, char **argv)
                                     {
                                         printf("Entrer le numero de voyage : ");
                                         scanf("%d", &idVoy);
-                                    } while (idVoy > nbreVoyages);
+                                    } while (!(idVoy <= nbreVoyages));
                                     ajouterReservation(username, idVoy);
                                 }
                                 break;
@@ -373,7 +373,7 @@ int main(int argc, char **argv)
                                     {
                                         printf("Entrer le numero de voyage : ");
                                         scanf("%d", &idVoy);
-                                    } while (idVoy > nbreVoyages);
+                                    } while (!(idVoy <= nbreVoyages));
                                     ajouterReservation(username, idVoy);
                                 }
                                 break;
@@ -394,7 +394,7 @@ int main(int argc, char **argv)
                                     {
                                         printf("Entrer le numero de voyage : ");
                                         scanf("%d", &idVoy);
-                                    } while (idVoy > nbreVoyages);
+                                    } while (!(idVoy <= nbreVoyages));
                                     ajouterReservation(username, idVoy);
                                 }
                                 break;
