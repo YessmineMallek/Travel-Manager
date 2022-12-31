@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <String.h>
+#include <windows.h>
 
 FILE *ficVoyage;
 FILE *ficArchive;
@@ -19,12 +20,13 @@ typedef struct Voyage
     char description[100];
     Date dateDep;
     Date dateArriv;
-    char aeroportDep[30];
-    char aeroportArr[30];
+    char VilleDep[30];
+    char villeArr[30];
     char compagnieAerienne[30];
     float prix;
     int nbrePlacesRest; // Pour les chaises restantes
 } Voyage;
+
 int calculerDuree(Date dateDep, Date dateArriv)
 {
     int duree = -1;
@@ -35,6 +37,23 @@ int calculerDuree(Date dateDep, Date dateArriv)
     duree = dateArrJour - dateDepJour;
     return duree;
 }
+/*****************Verifier la validité du date***********************/
+int estValideDate(Date date)
+{
+    SYSTEMTIME Time;
+
+    GetLocalTime(&Time);
+    Date dateSys;
+    dateSys.jour = Time.wDay;
+    dateSys.mois = Time.wMonth;
+    dateSys.annee = Time.wYear;
+    if (calculerDuree(dateSys, date) < -1) // date du voyage doit etre >au date systeme
+    {
+        return -1;
+    }
+    return 0;
+}
+
 int nbreVoyages()
 {
     int nbre = 0;
@@ -83,11 +102,11 @@ void convertirEnVoyage(char *ligne, Voyage *voyage)
         }
         if (i == 5)
         {
-            sprintf((*voyage).aeroportDep, p);
+            sprintf((*voyage).VilleDep, p);
         }
         if (i == 6)
         {
-            sprintf((*voyage).aeroportArr, p);
+            sprintf((*voyage).villeArr, p);
         }
         if (i == 7)
         {
@@ -149,7 +168,6 @@ int getVoyageById(int code, Voyage *voyage)
     char ligne[255];
     int nbre = nbreVoyages();
     int trouve = 0;
-    printf("LE NOMBREEE %d\n\n", nbre);
     ficVoyage = fopen("Voyages.txt", "a+");
     for (int i = 0; i < nbre; i++)
     {
@@ -157,8 +175,6 @@ int getVoyageById(int code, Voyage *voyage)
         convertirEnVoyage(ligne, voyage);
         if ((*voyage).code == code)
             trouve = 1;
-        printf("%s\n", ligne);
-        system("pause");
     }
 
     return trouve;
@@ -177,8 +193,6 @@ int getNombresPlaces(int code)
         convertirEnVoyage(ligne, &voyage);
         if (voyage.code == code)
             return (voyage.nbrePlacesRest);
-
-        system("pause");
     }
 
     return -1;
@@ -195,7 +209,7 @@ int voyageExiste(Voyage voyageAverif)
     itoa(voyageAverif.dateDep.jour, jourStr, 10);
     itoa(voyageAverif.dateDep.mois, moisStr, 10);
     itoa(voyageAverif.dateDep.annee, anneeStr, 10);
-    sprintf(code, strcat(strcat(strcat(strcat(strcat(strcat(jourStr, "/"), moisStr), "/"), anneeStr), voyageAverif.aeroportDep), voyageAverif.compagnieAerienne));
+    sprintf(code, strcat(strcat(strcat(strcat(strcat(strcat(jourStr, "/"), moisStr), "/"), anneeStr), voyageAverif.VilleDep), voyageAverif.compagnieAerienne));
     while (fgets(ligne, 254, ficVoyage) != NULL)
     {
 
@@ -203,13 +217,12 @@ int voyageExiste(Voyage voyageAverif)
         itoa(voyage.dateDep.jour, jourStr, 10);
         itoa(voyage.dateDep.mois, moisStr, 10);
         itoa(voyage.dateDep.annee, anneeStr, 10);
-        sprintf(codeVoy, strcat(strcat(strcat(strcat(strcat(strcat(jourStr, "/"), moisStr), "/"), anneeStr), voyage.aeroportDep), voyage.compagnieAerienne));
+        sprintf(codeVoy, strcat(strcat(strcat(strcat(strcat(strcat(jourStr, "/"), moisStr), "/"), anneeStr), voyage.VilleDep), voyage.compagnieAerienne));
         if (strcmp(codeVoy, code) == 0)
             return 1;
     }
     fclose(ficVoyage);
-    printf("-------%s\n", code);
-    printf("----****---%s\n", codeVoy);
+
     return 0;
 }
 
@@ -219,7 +232,7 @@ int idVoyage()
     int nbreFicVoya = nbreVoyages();
     int nbre = 0;
     char line[255];
-    ficArchive = fopen("archiveVoyage.txt", "r");
+    ficArchive = fopen("archiveVoyage.txt", "a+");
     if (ficArchive == NULL) // tester si le ficher est ouvert
         exit(1);
     while (fgets(line, 254, ficArchive) != NULL)
@@ -228,7 +241,17 @@ int idVoyage()
     }
     fclose(ficArchive);
 
-    return nbre + nbreFicVoya;
+    return (nbre + nbreFicVoya);
+}
+/*************************toString Voyage***********************************/
+void afficherVoyage(Voyage voyage)
+{
+    int duree = calculerDuree(voyage.dateDep, voyage.dateArriv);
+    printf("\n----------------------------------------------------------------------\n");
+
+    printf("\nCode voyage : %d \nDuree: %d jours a %s\nDescription : %s\nA partir de : %d/%d/%d\nJusqu'a : %d/%d/%d\nNombre places restantes : %d\n", voyage.code, duree, voyage.villeArr, voyage.description,
+           voyage.dateDep.jour, voyage.dateDep.mois, voyage.dateDep.annee,
+           voyage.dateArriv.jour, voyage.dateArriv.mois, voyage.dateArriv.annee, voyage.nbrePlacesRest);
 }
 int testSiFichierVide()
 {
@@ -263,12 +286,7 @@ void getDescriptionVoyages()
         {
 
             convertirEnVoyage(ligne, &voyage);
-            int duree = calculerDuree(voyage.dateDep, voyage.dateArriv);
-            printf("\nVoyage %d du %d jours a %s \n%s\nA partir de : %d/%d/%d \nJusqu'a : %d/%d/%d\nNombre places restantes : %d\n", voyage.code, duree, voyage.aeroportArr, voyage.description,
-                   voyage.dateDep.jour, voyage.dateDep.mois, voyage.dateDep.annee,
-                   voyage.dateArriv.jour, voyage.dateArriv.mois, voyage.dateArriv.annee, voyage.nbrePlacesRest);
-
-            printf("\n---------------------------------------------------------\n");
+            afficherVoyage(voyage);
         }
     }
 
@@ -285,30 +303,73 @@ void getAll()
     printf("code|description|prix|Date Depart|date arrivee|Aeroport depart|Aeroport arrivee|compagnie aerienne|Nombres Places Restantes\n");
     while (fgets(line, 254, ficVoyage) != NULL)
     {
+        printf("\n----------------------------------------------------------\n");
         printf("%s", line);
     }
     fclose(ficVoyage);
 }
-
+/**************************Get par ville Arrivee*****************************/
+void getByVilleArrivee(char arrivee[30])
+{
+    char line[255];
+    Voyage voyage;
+    ficVoyage = fopen("Voyages.txt", "r");
+    if (ficVoyage == NULL) // tester si le ficher est ouvert
+        exit(1);
+    while (fgets(line, 254, ficVoyage) != NULL)
+    {
+        convertirEnVoyage(line, &voyage);
+        if (strcmp(voyage.villeArr, arrivee) == 0)
+        {
+            afficherVoyage(voyage);
+        }
+    }
+    fclose(ficVoyage);
+}
+/**************************Get par ville depart*****************************/
+void getByVilleDepart(char depart[30])
+{
+    char line[255];
+    Voyage voyage;
+    ficVoyage = fopen("Voyages.txt", "r");
+    if (ficVoyage == NULL) // tester si le ficher est ouvert
+        exit(1);
+    while (fgets(line, 254, ficVoyage) != NULL)
+    {
+        convertirEnVoyage(line, &voyage);
+        if (strcmp(voyage.VilleDep, depart) == 0)
+        {
+            afficherVoyage(voyage);
+        }
+    }
+    fclose(ficVoyage);
+}
 /*************************Recherche des voyages disponibles par dates*****************/
-void getByDates()
+void getByDates(char username[30])
 {
     Voyage voyage;
     int nbreVoy = nbreVoyages();
     int duree;
-    getAll();
+    getDescriptionVoyages();
     Date dateDep;
     Date dateArr;
     char ligne[255];
+    int trouve;
 
     if (nbreVoy != 0)
     {
         ficVoyage = fopen("Voyages.txt", "r");
-
-        printf("Entrez la date de depart (jj/mm/aaaa) : ");
-        scanf("%d/%d/%d", &dateDep.jour, &dateDep.mois, &dateDep.annee);
-        printf("Entrez la date d'arrivee (jj/mm/aaaa) : ");
-        scanf("%d/%d/%d", &dateArr.jour, &dateArr.mois, &dateArr.annee);
+        do
+        {
+            printf("\nEntrez la date de depart (jj/mm/aaaa) : ");
+            scanf("%d/%d/%d", &dateDep.jour, &dateDep.mois, &dateDep.annee);
+        } while (estValideDate(dateDep) == -1);
+        printf("---------------------------------------------------\n");
+        do
+        {
+            printf("Entrez la date d'arrivee (jj/mm/aaaa) : ");
+            scanf("%d/%d/%d", &dateArr.jour, &dateArr.mois, &dateArr.annee);
+        } while (estValideDate(dateArr) == -1);
 
         if (dateDep.jour != 0 && dateDep.mois != 0 && dateDep.annee != 0 && dateArr.jour != 0 && dateArr.mois != 0 && dateArr.annee != 0)
         {
@@ -319,9 +380,8 @@ void getByDates()
                 if (voyage.dateDep.jour == dateDep.jour && voyage.dateDep.mois == dateDep.mois && voyage.dateDep.annee == dateDep.annee &&
                     voyage.dateArriv.jour == dateArr.jour && voyage.dateArriv.mois == dateArr.mois && voyage.dateArriv.annee == dateArr.annee)
                 {
-                    printf("\nVoyage :%d jours a %s\n%s\nA partir de : %d/%d/%d\nJusqu'a : %d/%d/%d\nNombre places restantes : %d\n", duree, voyage.aeroportArr, voyage.description,
-                           voyage.dateDep.jour, voyage.dateDep.mois, voyage.dateDep.annee,
-                           voyage.dateArriv.jour, voyage.dateArriv.mois, voyage.dateArriv.annee, voyage.nbrePlacesRest);
+                    trouve = 1;
+                    afficherVoyage(voyage);
                 }
             }
         }
@@ -335,9 +395,8 @@ void getByDates()
 
                 if (voyage.dateDep.jour == dateDep.jour && voyage.dateDep.mois == dateDep.mois && voyage.dateDep.annee == dateDep.annee)
                 {
-                    printf("\nVoyage : %d jours a %s\n%s\nA partir de : %d/%d/%d\nJusqu'a : %d/%d/%d\nNombre places restantes : %d\n", duree, voyage.aeroportArr, voyage.description,
-                           voyage.dateDep.jour, voyage.dateDep.mois, voyage.dateDep.annee,
-                           voyage.dateArriv.jour, voyage.dateArriv.mois, voyage.dateArriv.annee, voyage.nbrePlacesRest);
+                    trouve = 1;
+                    afficherVoyage(voyage);
                 }
             }
         }
@@ -351,11 +410,30 @@ void getByDates()
 
                 if (voyage.dateArriv.jour == dateArr.jour && voyage.dateArriv.mois == dateArr.mois && voyage.dateArriv.annee == dateArr.annee)
                 {
-                    printf("\nVoyage : %d jours a %s\n%s\nA partir de : %d/%d/%d\nJusqu'a : %d/%d/%d\nNombre places restantes : %d \n", duree, voyage.aeroportArr, voyage.description,
-                           voyage.dateDep.jour, voyage.dateDep.mois, voyage.dateDep.annee,
-                           voyage.dateArriv.jour, voyage.dateArriv.mois, voyage.dateArriv.annee, voyage.nbrePlacesRest);
+                    trouve = 1;
+                    afficherVoyage(voyage);
                 }
             }
+        }
+    }
+    int res;
+    int idVoy = 0;
+    if (trouve == 1)
+    {
+        do
+        {
+            printf("\t\tVoulez-vous reserver?\n* 1 *:oui\n* 2 *:non\n");
+            printf("Votre reponse : ");
+            scanf("%d", &res);
+        } while (res != 1 && res != 2);
+        if (res == 1)
+        {
+            do
+            {
+                printf("Entrer le numero de voyage : ");
+                scanf("%d", &idVoy);
+            } while (idVoy > nbreVoy);
+            ajouterReservation(username, idVoy);
         }
     }
     fclose(ficVoyage);
@@ -369,7 +447,9 @@ void ajoutVoyage()
 
     do
     {
+        printf("\n----------------------------------------------------------------------\n");
         printf("\t\t\t\tAjout d'un voyage\n");
+        printf("\n----------------------------------------------------------------------\n");
         int duree;
         Voyage.code = idVoyage() + 1;
 
@@ -385,24 +465,31 @@ void ajoutVoyage()
         do
         {
             // dateDepart
-            printf("Donner la date de depart sous la forme (jj/mm/aaaa) : ");
-            fflush(stdin);
-            scanf("%d/%d/%d", &Voyage.dateDep.jour, &Voyage.dateDep.mois, &Voyage.dateDep.annee);
-            // dateArrivee
-            printf("Donner la date d'arrivee sous la forme (jj/mm/aaaa) : ");
-            fflush(stdin);
-            scanf("%d/%d/%d", &Voyage.dateArriv.jour, &Voyage.dateArriv.mois, &Voyage.dateArriv.annee);
+            do
+            {
+                printf("Donner la date de depart sous la forme (jj/mm/aaaa) : ");
+                fflush(stdin);
+                scanf("%d/%d/%d", &Voyage.dateDep.jour, &Voyage.dateDep.mois, &Voyage.dateDep.annee);
+            } while (estValideDate(Voyage.dateDep) == -1);
+            do
+            {
+                // dateArrivee
+                printf("Donner la date d'arrivee sous la forme (jj/mm/aaaa) : ");
+                fflush(stdin);
+                scanf("%d/%d/%d", &Voyage.dateArriv.jour, &Voyage.dateArriv.mois, &Voyage.dateArriv.annee);
+            } while (estValideDate(Voyage.dateArriv) == -1);
+
             duree = calculerDuree(Voyage.dateDep, Voyage.dateArriv);
         } while (duree < -1);
         // Aeroport Depart
-        printf("Donner l'aeroport depart : ");
+        printf("Donner la ville depart : ");
         fflush(stdin);
-        gets(Voyage.aeroportDep);
+        gets(Voyage.VilleDep);
 
         // Aeroport Arrivee
-        printf("Donner l'aeroport d'arrive : ");
+        printf("Donner la ville d'arrive : ");
         fflush(stdin);
-        gets(Voyage.aeroportArr);
+        gets(Voyage.villeArr);
 
         // compagnie Aerienne
         printf("Donner le nom du compagnie Aerienne : ");
@@ -425,7 +512,7 @@ void ajoutVoyage()
                 exit(1);
 
             if (fprintf(ficVoyage, "%d|%s|%f|%d/%d/%d|%d/%d/%d|%s|%s|%s|%d\n", Voyage.code, Voyage.description, Voyage.prix, Voyage.dateDep.jour, Voyage.dateDep.mois, Voyage.dateDep.annee, Voyage.dateArriv.jour, Voyage.dateArriv.mois, Voyage.dateArriv.annee,
-                        Voyage.aeroportDep, Voyage.aeroportArr,
+                        Voyage.VilleDep, Voyage.villeArr,
                         Voyage.compagnieAerienne, Voyage.nbrePlacesRest) != -1)
             {
                 printf("\n**************** Ajout effectuee avec succees ************************\n");
@@ -502,22 +589,22 @@ void modifiderVoyage(int code, int choix)
                 {
                     printf("Saisir le nouvelle aeroport de depart :");
                     scanf("%s", nvAeropDep);
-                    sprintf(voyage.aeroportDep, nvAeropDep);
+                    sprintf(voyage.VilleDep, nvAeropDep);
                 }
                 else if (aerp == 2)
                 {
                     printf("Saisir le nouvelle aeroport d'arrivee :");
                     scanf("%s", nvAeropArr);
-                    sprintf(voyage.aeroportArr, nvAeropArr);
+                    sprintf(voyage.villeArr, nvAeropArr);
                 }
                 else
                 {
                     printf("Saisir le nouvelle aeroport de depart :");
                     scanf("%s", nvAeropDep);
-                    sprintf(voyage.aeroportDep, nvAeropDep);
+                    sprintf(voyage.VilleDep, nvAeropDep);
                     printf("Saisir le nouvelle aeroport d'arrivee :");
                     scanf("%s", nvAeropArr);
-                    sprintf(voyage.aeroportArr, nvAeropArr);
+                    sprintf(voyage.villeArr, nvAeropArr);
                 }
                 break;
             case 4:
@@ -536,7 +623,7 @@ void modifiderVoyage(int code, int choix)
             }
             choix = 0;
         }
-        fprintf(nv, "%d|%s|%f|%d/%d/%d|%d/%d/%d|%s|%s|%s|%d\n", voyage.code, voyage.description, voyage.prix, voyage.dateDep.jour, voyage.dateDep.mois, voyage.dateDep.annee, voyage.dateArriv.jour, voyage.dateArriv.mois, voyage.dateArriv.annee, voyage.aeroportDep, voyage.aeroportArr, voyage.compagnieAerienne, voyage.nbrePlacesRest);
+        fprintf(nv, "%d|%s|%f|%d/%d/%d|%d/%d/%d|%s|%s|%s|%d\n", voyage.code, voyage.description, voyage.prix, voyage.dateDep.jour, voyage.dateDep.mois, voyage.dateDep.annee, voyage.dateArriv.jour, voyage.dateArriv.mois, voyage.dateArriv.annee, voyage.VilleDep, voyage.villeArr, voyage.compagnieAerienne, voyage.nbrePlacesRest);
     }
     fclose(nv);
     fclose(ficVoyage);
@@ -545,7 +632,7 @@ void modifiderVoyage(int code, int choix)
     while (fgets(ligne2, 254, nv) != NULL)
     {
         convertirEnVoyage(ligne2, &voyage);
-        fprintf(ficVoyage, "%d|%s|%f|%d/%d/%d|%d/%d/%d|%s|%s|%s|%d\n", voyage.code, voyage.description, voyage.prix, voyage.dateDep.jour, voyage.dateDep.mois, voyage.dateDep.annee, voyage.dateArriv.jour, voyage.dateArriv.mois, voyage.dateArriv.annee, voyage.aeroportDep, voyage.aeroportArr, voyage.compagnieAerienne, voyage.nbrePlacesRest);
+        fprintf(ficVoyage, "%d|%s|%f|%d/%d/%d|%d/%d/%d|%s|%s|%s|%d\n", voyage.code, voyage.description, voyage.prix, voyage.dateDep.jour, voyage.dateDep.mois, voyage.dateDep.annee, voyage.dateArriv.jour, voyage.dateArriv.mois, voyage.dateArriv.annee, voyage.VilleDep, voyage.villeArr, voyage.compagnieAerienne, voyage.nbrePlacesRest);
     }
     fclose(nv);
     fclose(ficVoyage);
@@ -572,7 +659,7 @@ void supprimerVoyage()
 
         } while (code < 0 || code > nbreVoy);
         ficVoyage = fopen("Voyages.txt", "r");
-        ficArchive = fopen("archiveVoyage.txt", "w");
+        ficArchive = fopen("archiveVoyage.txt", "a+");
         nv = fopen("nv.txt", "w");
         do
         {
@@ -587,11 +674,11 @@ void supprimerVoyage()
 
                 if (voyage.code != code)
                 {
-                    fprintf(nv, "%d|%s|%f|%d/%d/%d|%d/%d/%d|%s|%s|%s|%d\n", voyage.code, voyage.description, voyage.prix, voyage.dateDep.jour, voyage.dateDep.mois, voyage.dateDep.annee, voyage.dateArriv.jour, voyage.dateArriv.mois, voyage.dateArriv.annee, voyage.aeroportDep, voyage.aeroportArr, voyage.compagnieAerienne, voyage.nbrePlacesRest);
+                    fprintf(nv, "%d|%s|%f|%d/%d/%d|%d/%d/%d|%s|%s|%s|%d\n", voyage.code, voyage.description, voyage.prix, voyage.dateDep.jour, voyage.dateDep.mois, voyage.dateDep.annee, voyage.dateArriv.jour, voyage.dateArriv.mois, voyage.dateArriv.annee, voyage.VilleDep, voyage.villeArr, voyage.compagnieAerienne, voyage.nbrePlacesRest);
                 }
                 else
                 {
-                    fprintf(ficArchive, "%d|%s|%f|%d/%d/%d|%d/%d/%d|%s|%s|%s|%d\n", voyage.code, voyage.description, voyage.prix, voyage.dateDep.jour, voyage.dateDep.mois, voyage.dateDep.annee, voyage.dateArriv.jour, voyage.dateArriv.mois, voyage.dateArriv.annee, voyage.aeroportDep, voyage.aeroportArr, voyage.compagnieAerienne, voyage.nbrePlacesRest);
+                    fprintf(ficArchive, "%d|%s|%f|%d/%d/%d|%d/%d/%d|%s|%s|%s|%d\n", voyage.code, voyage.description, voyage.prix, voyage.dateDep.jour, voyage.dateDep.mois, voyage.dateDep.annee, voyage.dateArriv.jour, voyage.dateArriv.mois, voyage.dateArriv.annee, voyage.VilleDep, voyage.villeArr, voyage.compagnieAerienne, voyage.nbrePlacesRest);
                 }
             }
             fclose(nv);
@@ -603,7 +690,7 @@ void supprimerVoyage()
             while (fgets(ligne, 254, nv) != NULL)
             {
                 convertirEnVoyage(ligne, &voyage);
-                fprintf(ficVoyage, "%d|%s|%f|%d/%d/%d|%d/%d/%d|%s|%s|%s|%d\n", voyage.code, voyage.description, voyage.prix, voyage.dateDep.jour, voyage.dateDep.mois, voyage.dateDep.annee, voyage.dateArriv.jour, voyage.dateArriv.mois, voyage.dateArriv.annee, voyage.aeroportDep, voyage.aeroportArr, voyage.compagnieAerienne, voyage.nbrePlacesRest);
+                fprintf(ficVoyage, "%d|%s|%f|%d/%d/%d|%d/%d/%d|%s|%s|%s|%d\n", voyage.code, voyage.description, voyage.prix, voyage.dateDep.jour, voyage.dateDep.mois, voyage.dateDep.annee, voyage.dateArriv.jour, voyage.dateArriv.mois, voyage.dateArriv.annee, voyage.VilleDep, voyage.villeArr, voyage.compagnieAerienne, voyage.nbrePlacesRest);
             }
             printf("\n*****************************Suppression effectuée avec succées*********************************\n");
         }
@@ -634,7 +721,7 @@ void modifiderNombrePlaces(int code, int nvNbre)
         {
             voyage.nbrePlacesRest = nvNbre;
         }
-        fprintf(nv, "%d|%s|%f|%d/%d/%d|%d/%d/%d|%s|%s|%s|%d\n", voyage.code, voyage.description, voyage.prix, voyage.dateDep.jour, voyage.dateDep.mois, voyage.dateDep.annee, voyage.dateArriv.jour, voyage.dateArriv.mois, voyage.dateArriv.annee, voyage.aeroportDep, voyage.aeroportArr, voyage.compagnieAerienne, voyage.nbrePlacesRest);
+        fprintf(nv, "%d|%s|%f|%d/%d/%d|%d/%d/%d|%s|%s|%s|%d\n", voyage.code, voyage.description, voyage.prix, voyage.dateDep.jour, voyage.dateDep.mois, voyage.dateDep.annee, voyage.dateArriv.jour, voyage.dateArriv.mois, voyage.dateArriv.annee, voyage.VilleDep, voyage.villeArr, voyage.compagnieAerienne, voyage.nbrePlacesRest);
     }
     fclose(nv);
     fclose(ficVoyage);
@@ -643,7 +730,7 @@ void modifiderNombrePlaces(int code, int nvNbre)
     while (fgets(ligne2, 254, nv) != NULL)
     {
         convertirEnVoyage(ligne2, &voyage);
-        fprintf(ficVoyage, "%d|%s|%f|%d/%d/%d|%d/%d/%d|%s|%s|%s|%d\n", voyage.code, voyage.description, voyage.prix, voyage.dateDep.jour, voyage.dateDep.mois, voyage.dateDep.annee, voyage.dateArriv.jour, voyage.dateArriv.mois, voyage.dateArriv.annee, voyage.aeroportDep, voyage.aeroportArr, voyage.compagnieAerienne, voyage.nbrePlacesRest);
+        fprintf(ficVoyage, "%d|%s|%f|%d/%d/%d|%d/%d/%d|%s|%s|%s|%d\n", voyage.code, voyage.description, voyage.prix, voyage.dateDep.jour, voyage.dateDep.mois, voyage.dateDep.annee, voyage.dateArriv.jour, voyage.dateArriv.mois, voyage.dateArriv.annee, voyage.VilleDep, voyage.villeArr, voyage.compagnieAerienne, voyage.nbrePlacesRest);
     }
     fclose(nv);
     fclose(ficVoyage);

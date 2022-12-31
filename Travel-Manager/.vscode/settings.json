@@ -4,6 +4,8 @@
         "new": "c",
         "*.tcc": "c",
         "voyage.h": "c",
-        "reservation.h": "c"
+        "reservation.h": "c",
+        "unistd.h": "c",
+        "stdio.h": "c"
     }
 }
